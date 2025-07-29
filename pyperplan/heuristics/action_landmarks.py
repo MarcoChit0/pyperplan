@@ -47,7 +47,7 @@ class ActionLandmarkHeuristic(Heuristic):
         for op in self.action_landmarks:
             print(f"{op.name}")
         print("</action_landmarks>")
-        exit(1)
+        exit(0)
 
 
     def __call__(self, node):
