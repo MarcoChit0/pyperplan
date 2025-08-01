@@ -43,10 +43,10 @@ class ActionLandmarkHeuristic(Heuristic):
     def __init__(self, task):
         self.task = task
         self.action_landmarks = get_action_landmarks(task)
-        print("<action_landmarks>")
+        print("<landmarks-set>")
         for op in self.action_landmarks:
             print(f"{op.name}")
-        print("</action_landmarks>")
+        print("</landmarks-set>")
         exit(0)
 
 
