@@ -177,7 +177,8 @@ def search_plan(
     if not heuristic_class is None:
         heuristic = heuristic_class(task)
     search_start_time = time.process_time()
-    if use_preferred_ops and isinstance(heuristic, heuristics.hFFHeuristic):
+    from pyperplan.heuristics.relaxation import hFFHeuristic
+    if use_preferred_ops and isinstance(heuristic, hFFHeuristic):
         solution = _search(task, search, heuristic, use_preferred_ops=True)
     else:
         solution = _search(task, search, heuristic)

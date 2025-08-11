@@ -162,6 +162,11 @@ def astar_search(
                     searchspace.make_root_node(pop_state)
                 )
                 logging.debug("relaxed plan %s " % rplan)
+                print("<relaxed-plan>")
+                for action in rplan:
+                    print(action)
+                print("</relaxed-plan>")
+                exit(0)
 
             for op, succ_state in task.get_successor_states(pop_state):
                 if use_relaxed_plan:

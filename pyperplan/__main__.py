@@ -56,7 +56,7 @@ def main():
     argparser.add_argument(
         "-H",
         "--heuristic",
-        choices=HEURISTICS.keys(),
+        choices=list(HEURISTICS.keys()) + ["hffpo"],
         help="Select a heuristic",
         default="hff",
     )
@@ -91,7 +91,7 @@ def main():
         args.domain = os.path.abspath(args.domain)
 
     search = SEARCHES[args.search]
-    heuristic = HEURISTICS[args.heuristic]
+    heuristic = HEURISTICS[args.heuristic] if args.heuristic != "hffpo" else HEURISTICS["hff"]
 
     if args.search in ["bfs", "ids", "sat"]:
         heuristic = None
