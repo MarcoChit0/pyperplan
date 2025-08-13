@@ -389,6 +389,33 @@ class hFFHeuristic(_RelaxationHeuristic):
         """
         Helper method to calculate hFF value together with a relaxed plan.
         """
+        def get_sorted_plan(current_state, sorted_plan, available_actions):
+            if not available_actions:
+                if self.goals.issubset(current_state):
+                    return sorted_plan
+                return None
+
+            for i in range(len(available_actions)):
+
+                action = available_actions[i]
+
+                if not action.preconditions.issubset(current_state):
+                    continue
+
+                remaining_actions = available_actions[:i] + available_actions[i+1:]
+                
+                new_sorted_plan = sorted_plan + [action]
+                
+                # Apply the action's add effects
+                new_state = current_state.union(action.add_effects)
+                
+                p = get_sorted_plan(new_state, new_sorted_plan, remaining_actions)
+                
+                if p is not None:
+                    return p
+                    
+            return None
+
         state = node.state
         state = set(state)
         # Reset distance and set to default values.
@@ -404,13 +431,28 @@ class hFFHeuristic(_RelaxationHeuristic):
                 heap, (self.facts[fact].distance, self.tie_breaker, self.facts[fact])
             )
             self.tie_breaker += 1
-
         # Call the Dijkstra search that performs the forward pass.
         self.dijkstra(heap)
         h_value = self.calc_goal_h(True)
 
         if type(h_value) is tuple:
-            return h_value[0], h_value[1]
+            available_actions = []
+            for a in h_value[1]:
+                action = None
+                for o in self.operators:
+                    if o.name == a:
+                        action = o
+                        break
+                if action is not None:
+                    available_actions.append(action)
+                else:
+                    raise ValueError("Unknown action: {}".format(a))
+            p = get_sorted_plan(self.init, [], available_actions)
+            print("<relaxed-plan>")
+            for action in p:
+                print(action.name)
+            print("</relaxed-plan>")
+            exit(0)
         else:
             return h_value
 
